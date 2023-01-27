@@ -1,0 +1,13 @@
+mvp:
+
++ saving
++ tutorial
++ main menu
++ klaxon
++ tutorialize shooting
++ ending
++ music
++ sfx
++ shrink hitbox on crouch
++ ambience
+- graphics
