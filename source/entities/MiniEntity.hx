@@ -12,6 +12,18 @@ class MiniEntity extends Entity
         super(x, y);
     }
 
+    private function collideMultiple(
+        types:Array<String>, virtualX:Float, virtualY:Float
+    ) {
+        for(type in types) {
+            var collided = collide(type, virtualX, virtualY);
+            if(collided != null) {
+                return collided;
+            }
+        }
+        return null;
+    }
+
     private function isOnGround() {
         return collide("walls", x, y + 1) != null;
     }

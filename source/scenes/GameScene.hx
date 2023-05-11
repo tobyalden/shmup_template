@@ -21,7 +21,6 @@ class GameScene extends Scene
     public static var totalTime:Float = 0;
     public static var deathCount:Float = 0;
     public static var sfx:Map<String, Sfx> = null;
-    public static var bossCheckpoint:Vector2 = null;
 
     public var activeBosses(default, null):Array<Boss>;
     public var defeatedBossNames(default, null):Array<String>;
@@ -33,11 +32,8 @@ class GameScene extends Scene
     private var ui:UI;
     private var canRetry:Bool;
 
-    public function saveGame(checkpoint:Checkpoint) {
-        GameScene.bossCheckpoint = null;
+    public function saveGame() {
         Data.write("hasSaveData", true);
-        Data.write("currentCheckpoint", new Vector2(checkpoint.x + 2, checkpoint.bottom - 24));
-        Data.write("flipX", player.sprite.flipX);
         Data.write("totalTime", totalTime);
         Data.write("deathCount", deathCount);
         Data.write("defeatedBossNames", defeatedBossNames.join(','));
@@ -65,11 +61,6 @@ class GameScene extends Scene
         for(entity in level.entities) {
             if(entity.name == "player") {
                 player = cast(entity, Player);
-                var currentCheckpoint = Data.read(
-                    "currentCheckpoint", new Vector2(player.x, player.y)
-                );
-                var checkpoint = GameScene.bossCheckpoint != null ? GameScene.bossCheckpoint : currentCheckpoint;
-                player.moveTo(checkpoint.x, checkpoint.y);
             }
             else if(entity.type == "boss" && isBossDefeated(entity.name)) {
                 trace('Boss with name "${entity.name}" already defeated. Skipping...');
@@ -112,7 +103,6 @@ class GameScene extends Scene
         var boss = cast(getInstance(bossName), Boss);
         boss.active = true;
         activeBosses.push(boss);
-        GameScene.bossCheckpoint = newBossCheckpoint;
     }
 
     public function onDeath() {
@@ -131,11 +121,6 @@ class GameScene extends Scene
             var retry = false;
             if(Input.pressed("jump")) {
                 sfx["retry"].play(0.75);
-                retry = true;
-            }
-            else if(GameScene.bossCheckpoint != null && Input.pressed("action")) {
-                sfx["backtosavepoint"].play();
-                GameScene.bossCheckpoint = null;
                 retry = true;
             }
             if(retry) {

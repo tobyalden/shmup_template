@@ -67,11 +67,7 @@ class UI extends MiniEntity {
     public override function update() {
         var gameScene = cast(HXP.scene, GameScene);
         if(!gameScene.isRetrying) {
-            retryPrompt.text = (
-                GameScene.bossCheckpoint != null
-                ? "Z: Try again\nX: Return to checkpoint"
-                : "Z: Return to checkpoint"
-            );
+            retryPrompt.text = "Z: try again";
             retryPrompt.centerOrigin();
         }
         var activeBosses = gameScene.activeBosses;
