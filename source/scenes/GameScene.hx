@@ -15,8 +15,8 @@ import openfl.Assets;
 class GameScene extends Scene
 {
     public static inline var SAVE_FILE_NAME = "saveme";
-    public static inline var GAME_WIDTH = 320;
-    public static inline var GAME_HEIGHT = 180;
+    public static inline var GAME_WIDTH = 270;
+    public static inline var GAME_HEIGHT = 360;
 
     public static var totalTime:Float = 0;
     public static var deathCount:Float = 0;
@@ -56,18 +56,15 @@ class GameScene extends Scene
         canRetry = false;
         isRetrying = false;
 
-        level = add(new Level("level"));
-        var skies = new Array<Entity>();
-        for(entity in level.entities) {
-            if(entity.name == "player") {
-                player = cast(entity, Player);
-            }
-            else if(entity.type == "boss" && isBossDefeated(entity.name)) {
-                trace('Boss with name "${entity.name}" already defeated. Skipping...');
-                continue;
-            }
-            add(entity);
-        }
+        player = new Player(GAME_WIDTH / 2, GAME_HEIGHT / 4 * 3);
+        player.moveBy(-player.width / 2, -player.height / 2);
+        add(player);
+        
+        var boss = add(new TestBoss(GAME_WIDTH / 2, GAME_HEIGHT / 8));
+        boss.moveBy(-boss.width / 2, 0);
+        boss.active = true;
+        activeBosses.push(boss);
+        add(boss);
 
         if(sfx == null) {
             sfx = [
@@ -96,7 +93,7 @@ class GameScene extends Scene
         return defeatedBossNames.indexOf(bossName) != -1;
     }
 
-    public function triggerBoss(bossName:String, newBossCheckpoint:Vector2) {
+    public function triggerBoss(bossName:String) {
         if(isBossDefeated(bossName)) {
             return;
         }
@@ -143,10 +140,5 @@ class GameScene extends Scene
             trace(activeBosses);
         }
         super.update();
-        camera.setTo(
-            Math.floor(player.centerX / GAME_WIDTH) * GAME_WIDTH,
-            Math.floor(player.bottom / GAME_HEIGHT) * GAME_HEIGHT,
-            0, 0
-        );
     }
 }

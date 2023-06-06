@@ -12,7 +12,7 @@ import scenes.*;
 
 class Player extends MiniEntity
 {
-    public static inline var SPEED = 140;
+    public static inline var SPEED = 200;
     public static inline var SHOT_COOLDOWN = 0.1;
     public static inline var SHOT_SPEED = 400;
 
@@ -148,6 +148,9 @@ class Player extends MiniEntity
         velocity.normalize(SPEED);
 
         moveBy(velocity.x * HXP.elapsed, velocity.y * HXP.elapsed);
+
+        clampHorizontal(0, GameScene.GAME_WIDTH);
+        clampVertical(0, GameScene.GAME_HEIGHT);
     }
 
 
